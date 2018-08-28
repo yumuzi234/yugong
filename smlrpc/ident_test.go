@@ -11,6 +11,7 @@ func TestLowerIdent(t *testing.T) {
 		{"A", "a"},
 		{"Base", "base"},
 		{"Something", "something"},
+		{"MyReader", "myReader"},
 		{"HTTP", "http"},
 		{"HTTPConnection", "httpConnection"},
 		{"_A", "_A"},
