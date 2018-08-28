@@ -1,0 +1,18 @@
+sudo: false
+language: go
+go_import_path: shanhu.io/yugong
+
+go:
+    - "1.11"
+
+install:
+    - go get ./...
+    - go get github.com/golang/lint/golint
+
+script:
+    - test -z `gofmt -s -l .`
+    - go test ./...
+    - go install -i ./...
+    - smlchk -path="shanhu.io/yugong"
+    - golint ./...
+    - go vet ./...
