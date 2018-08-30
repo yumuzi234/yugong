@@ -11,15 +11,15 @@ func lowerIdent(in string) string {
 	var out []byte
 	i := 0
 	foundLower := false
-	for ;i<len(in) && !foundLower;i++ {
+	for ; i < len(in) && !foundLower; i++ {
 		cur := in[i]
 		cur, foundLower = toLow(cur)
 		out = append(out, cur)
 	}
-	if i>2 && i!= len(in) {
+	if i > 2 && i != len(in) {
 		out[i-2] = out[i-2] - 32
 	}
-	for ;i<len(in);i++ {
+	for ; i < len(in); i++ {
 		cur := in[i]
 		if foundLower {
 			out = append(out, cur)
@@ -37,7 +37,7 @@ func isCap(b byte) bool {
 }
 
 func isLow(b byte) bool {
-	return b >='a' && b <= 'z'
+	return b >= 'a' && b <= 'z'
 }
 
 func toLow(b byte) (byte, bool) {
