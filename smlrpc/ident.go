@@ -1,48 +1,53 @@
 package smlrpc
 
-func lowerIdent(in string) string {
-	if len(in) == 0 {
-		return in
+import (
+	"strings"
+	"unicode"
+)
+
+func lowerIdent(in string) (string, error) {
+	if in == "" {
+		return in, nil
 	}
-	start := in[0]
-	if !isCap(start) && !isLow(start) {
-		return in
+	runes := []rune(in)
+	start := runes[0]
+	if !unicode.IsUpper(start) && !unicode.IsLower(start) {
+		return in, nil
 	}
-	var out []byte
-	i := 0
-	foundLower := false
-	for ; i < len(in) && !foundLower; i++ {
-		cur := in[i]
-		cur, foundLower = toLow(cur)
-		out = append(out, cur)
+	var b strings.Builder
+	// change the first letter to lower case
+	cur := runes[0]
+	_, err := b.WriteRune(unicode.ToLower(cur))
+	if err != nil {
+		return "", err
 	}
-	if i > 2 && i != len(in) {
-		out[i-2] = out[i-2] - 32
-	}
-	for ; i < len(in); i++ {
-		cur := in[i]
-		if foundLower {
-			out = append(out, cur)
-			foundLower = isLow(cur)
+	i := 1
+	foundLower := unicode.IsLower(cur)
+	for ; i < len(runes)-1 && !foundLower; i++ {
+		cur := runes[i]
+		next := runes[i+1]
+		if unicode.IsLower(next) {
+			foundLower = true
 		} else {
-			cur, foundLower = toLow(cur)
-			out = append(out, cur)
+			cur = unicode.ToLower(cur)
+		}
+		_, err := b.WriteRune(cur)
+		if err != nil {
+			return "", err
 		}
 	}
-	return string(out)
-}
 
-func isCap(b byte) bool {
-	return b >= 'A' && b <= 'Z'
-}
-
-func isLow(b byte) bool {
-	return b >= 'a' && b <= 'z'
-}
-
-func toLow(b byte) (byte, bool) {
-	if isCap(b) {
-		return b + 32, false
+	for ; i < len(in); i++ {
+		cur := runes[i]
+		toWrite := cur
+		if !foundLower {
+			toWrite = unicode.ToLower(cur)
+		}
+		foundLower = unicode.IsLower(cur)
+		_, err := b.WriteRune(toWrite)
+		if err != nil {
+			return "", err
+		}
 	}
-	return b, true
+	return b.String(), nil
 }

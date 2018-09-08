@@ -13,11 +13,12 @@ func TestLowerIdent(t *testing.T) {
 		{"Something", "something"},
 		{"MyReader", "myReader"},
 		{"HTTP", "http"},
+		{"HaHa", "haHa"},
 		{"HTTPConnection", "httpConnection"},
 		{"_A", "_A"},
 		{"lowerAlready", "lowerAlready"},
 	} {
-		if got := lowerIdent(test.in); got != test.out {
+		if got, _ := lowerIdent(test.in); got != test.out {
 			t.Errorf(
 				"lowerIdent(%q), want %q, got %q",
 				test.in, test.out, got,
